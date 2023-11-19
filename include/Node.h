@@ -1,11 +1,10 @@
-
-//#include "headers.h"
 #include "clockcalendar.h"
+#include <string.h>
 
 struct Dados{
-  int Operacao;
+  char Operacao[20];
   ClockCalendar Data_Hora;
-  Dados(int Op,ClockCalendar dt) : Operacao(Op) , Data_Hora(dt){};
+  Dados(char *Op,ClockCalendar dt){strcpy(Operacao,Op);Data_Hora=dt;}
   Dados(): Operacao(-1), Data_Hora(){};
 };
 

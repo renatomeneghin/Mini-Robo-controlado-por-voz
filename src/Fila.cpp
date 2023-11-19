@@ -1,5 +1,5 @@
 #include "Fila.h"
-
+#include <stdio.h>
 Fila::Fila(){
    head = 0;
 }
@@ -37,18 +37,27 @@ void Fila::insert(Dados dat){
 
 Dados Fila::read(){return head->getLog();}
 Dados Fila::remove(){
+    
+  Dados valor = (head)? head->getLog() : Dados("",ClockCalendar());
   
-  Dados valor = (head)? head->getLog() : Dados(0,ClockCalendar());
-  
-  if(head->getNext()){
-    Node* aux = head;
-    head = head->getNext();
-    delete aux;
-  }
-  else{
-    delete head;
-    head = 0;
-  }
-  
+    try{
+        if(head) {
+        if(head->getNext()){
+          Node* aux = head;
+          head = head->getNext();
+          delete aux;
+        }
+        else{
+          delete head;
+          head = 0;
+        }
+      } else{
+        throw "Exception:Ponteiro Nulo";
+      }
+    } catch (const char *s){
+      puts(s);
+    }
+
+    
   return valor;
 }

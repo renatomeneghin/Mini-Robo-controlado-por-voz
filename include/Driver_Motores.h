@@ -3,17 +3,26 @@
 #pragma once
 
 #include "Motor.h"
+#include "driver/gpio.h"
+#include "driver/mcpwm_prelude.h"
+#include "esp_err.h"
 
-#define N_MOTORES 2
-
-class Driver_motor {
+class Driver_motor : public Motor{
   protected:
-    Motor Motores[N_MOTORES];
-    int GPIO_pins[N_MOTORES];
+    mcpwm_timer_handle_t temporizador;
+    mcpwm_oper_handle_t operador;
+    mcpwm_cmpr_handle_t comparador;
+    mcpwm_gen_handle_t geradores[2];
+    int PWM_gpios[2];
   public:
-    Driver_motor (Motor Motores_[N_MOTORES], int IO[N_MOTORES]);
-    
+    Driver_motor(uint16_t , uint8_t , uint32_t , uint32_t , int *);
+    Driver_motor(uint16_t , uint8_t , uint32_t , uint32_t , int, int);
+    Driver_motor(int pinos[2]);
+    Driver_motor(int pinoA,int pinoB);
+    ~Driver_motor();
+    void init(void);
+    void girar();
+    void parar();
 };
-
 
 #endif

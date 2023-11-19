@@ -4,16 +4,16 @@
 
 class Clock {
 protected:
- int hr, min, sec, is_pm;
+  int hr, min, sec, is_pm;
   bool mudanca;
 public:
- Clock (int h, int s, int m, int pm);
- void setClock (int h, int s, int m,
- int pm);
- void readClock (int *h, int *s,
- int *m, int *pm);
- void advance ();
- friend void operator++ (Clock&);
+  Clock (int h, int s, int m, int pm);
+  void setClock (int h, int s, int m,
+  int pm);
+  void readClock (int *h, int *s,
+  int *m, int *pm);
+  void advance ();
+  friend void operator++ (Clock&);
 };
 
 
