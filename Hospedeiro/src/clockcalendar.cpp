@@ -2,7 +2,7 @@
 
 ClockCalendar::ClockCalendar() : Clock(-1, -1, -1, -1), Calendar(-1, -1, -1) {}
 ClockCalendar::ClockCalendar(int mt, int d, int y, int h, int m, int s, int pm)
-    : Clock(h, m, s, pm), Calendar(mt, d, y) {}
+    : Clock(h, s, m, pm), Calendar(mt, d, y) {}
 ClockCalendar::~ClockCalendar() {}
 
 void ClockCalendar::advance() {
@@ -14,36 +14,39 @@ void ClockCalendar::advance() {
 
 void operator++(ClockCalendar &cc) { cc.advance(); }
 
-bool operator==(ClockCalendar &cc1,ClockCalendar &cc2)
+bool ClockCalendar::operator==(const ClockCalendar &cc) const
 {
-  int d1, m1, a1, h1, mn1, s1, p1, d2, m2, a2, h2, mn2, s2, p2;
-  cc1.readCalendar(&m1,&d1,&a1);  
-  cc1.readClock(&h1,&s1,&mn1,&p1);
-  cc2.readCalendar(&m2,&d2,&a2);  
-  cc2.readClock(&h2,&s2,&mn2,&p2);
-  return ((h1 == h2) && (mn1 == mn2) && (s1 == s2) && (p1 == p2) && (a1 == a2) && (m1 == m2) && (d1 == d2));
+  int dia, mes, ano, hora, minuto, segundo, pm;
+  ClockCalendar c = cc;
+  c.readCalendar(&mes,&dia,&ano);  
+  c.readClock(&hora,&segundo,&minuto,&pm);
+  //cc2.readCalendar(&m2,&d2,&a2);  
+  //cc2.readClock(&h2,&s2,&mn2,&p2);
+  return ((hr == hora) && (min == minuto) && (sec == segundo) && (is_pm == pm) && (yr == ano) && (mo == mes) && (day == dia));
 }
 
-bool operator!=(ClockCalendar &cc1,ClockCalendar &cc2)
+bool ClockCalendar::operator!=(const ClockCalendar &cc) const
 {
-  int d1, m1, a1, h1, mn1, s1, p1, d2, m2, a2, h2, mn2, s2, p2;
-  cc1.readCalendar(&m1,&d1,&a1);  
-  cc1.readClock(&h1,&s1,&mn1,&p1);
-  cc2.readCalendar(&m2,&d2,&a2);  
-  cc2.readClock(&h2,&s2,&mn2,&p2);
-  return ((h1 != h2) || (mn1 != mn2) || (s1 != s2) || (p1 != p2) || (a1 != a2) || (m1 != m2) || (d1 != d2));
+  int dia, mes, ano, hora, minuto, segundo, pm;
+  ClockCalendar c = cc;
+  c.readCalendar(&mes,&dia,&ano);  
+  c.readClock(&hora,&segundo,&minuto,&pm);
+  //cc2.readCalendar(&m2,&d2,&a2);  
+  //cc2.readClock(&h2,&s2,&mn2,&p2);
+  return ((hr != hora) || (min != minuto) || (sec != segundo) || (is_pm != pm) || (yr != ano) || (mo != mes) || (day != dia));
 }
 
-bool operator<(ClockCalendar &cc1,ClockCalendar &cc2)
+bool ClockCalendar::operator<(const ClockCalendar &cc) const
 {
   bool resultado = false;
-  int d1, m1, a1, h1, mn1, s1, p1, d2, m2, a2, h2, mn2, s2, p2;
-  cc1.readCalendar(&m1,&d1,&a1);  
-  cc1.readClock(&h1,&s1,&mn1,&p1);
-  cc2.readCalendar(&m2,&d2,&a2);  
-  cc2.readClock(&h2,&s2,&mn2,&p2);
-  Calendar c1(m1,d1,a1),c2(m2,d2,a2); 
-  Clock cl1(h1,s1,mn1,p1), cl2(h2,s2,mn2,p2);
+  int dia, mes, ano, hora, minuto, segundo, pm;
+  ClockCalendar c = cc;
+  c.readCalendar(&mes,&dia,&ano);  
+  c.readClock(&hora,&segundo,&minuto,&pm);
+  //cc2.readCalendar(&m2,&d2,&a2);  
+  //cc2.readClock(&h2,&s2,&mn2,&p2);
+  Calendar c1(mo,day,yr),c2(mes,dia,ano); 
+  Clock cl1(hr,sec,min,is_pm), cl2(hora,segundo,minuto,pm);
   if(c1 < c2){
     resultado = true;
   } else if(c1 == c2){
@@ -52,20 +55,107 @@ bool operator<(ClockCalendar &cc1,ClockCalendar &cc2)
   return resultado;
 }
 
-bool operator>(ClockCalendar &cc1,ClockCalendar &cc2)
+bool ClockCalendar::operator>(const ClockCalendar &cc) const
 {
   bool resultado = false;
-  int d1, m1, a1, h1, mn1, s1, p1, d2, m2, a2, h2, mn2, s2, p2;
-  cc1.readCalendar(&m1,&d1,&a1);  
-  cc1.readClock(&h1,&s1,&mn1,&p1);
-  cc2.readCalendar(&m2,&d2,&a2);  
-  cc2.readClock(&h2,&s2,&mn2,&p2);
-  Calendar c1(m1,d1,a1),c2(m2,d2,a2); 
-  Clock cl1(h1,s1,mn1,p1), cl2(h2,s2,mn2,p2);
+  int dia, mes, ano, hora, minuto, segundo, pm;
+  ClockCalendar c = cc;
+  c.readCalendar(&mes,&dia,&ano);  
+  c.readClock(&hora,&segundo,&minuto,&pm);
+  //cc2.readCalendar(&m2,&d2,&a2);  
+  //cc2.readClock(&h2,&s2,&mn2,&p2);
+  Calendar c1(mo,day,yr),c2(mes,dia,ano); 
+  Clock cl1(hr,sec,min,is_pm), cl2(hora,segundo,minuto,pm);
   if(c1 > c2){
     resultado = true;
   } else if(c1 == c2){
     resultado = (cl1 > cl2);
+  }
+  return resultado;
+}
+
+bool ClockCalendar::greater_than(ClockCalendar cc1){
+  bool resultado = false;
+  int dia = day, mes= mo, ano=yr, hora=hr, minuto=min, segundo=sec, pm=is_pm;
+  int dia2, mes2, ano2, hora2, minuto2, segundo2, pm2;
+  cc1.readCalendar(&mes2,&dia2,&ano2);  
+  cc1.readClock(&hora2,&segundo2,&minuto2,&pm2);
+  
+  if(ano > ano2){
+    resultado = true;
+  }
+  else if (ano == ano2){
+    if(mes > mes2){
+      resultado = true;
+    }
+    else if (mes == mes2){
+      if (dia > dia2){
+        resultado = true;
+        }
+        else if(dia == dia2){ 
+          if(pm && !pm2){
+            resultado == true;
+          }
+          else if (pm == pm2){
+            if(hora > hora2){
+              resultado = true;
+              }
+              else if (hora == hora2){
+                if(minuto > minuto2){
+                  resultado = true;
+                  }
+                  else if (minuto == minuto2){
+                    if (segundo > segundo2){
+                      resultado = true;
+                      }
+                  }
+              }
+          }
+        }
+    }
+  }
+  return resultado;
+}
+
+bool ClockCalendar::smaller_than(ClockCalendar cc1){
+  bool resultado = false;
+  int dia = day, mes= mo, ano=yr, hora=hr, minuto=min, segundo=sec, pm=is_pm;
+  int dia2, mes2, ano2, hora2, minuto2, segundo2, pm2;
+  cc1.readCalendar(&mes2,&dia2,&ano2);  
+  cc1.readClock(&hora2,&segundo2,&minuto2,&pm2);
+  
+  if(ano < ano2){
+    resultado = true;
+  }
+  else if (ano == ano2){
+    if(mes < mes2){
+      resultado = true;
+    }
+    else if (mes == mes2){
+      if (dia < dia2){
+        resultado = true;
+        }
+        else if(dia == dia2){ 
+          if(pm && !pm2){
+            resultado == true;
+          }
+          else if (pm == pm2){
+            if(hora < hora2){
+              resultado = true;
+              }
+              else if (hora == hora2){
+                if(minuto < minuto2){
+                  resultado = true;
+                  }
+                  else if (minuto == minuto2){
+                    if (segundo < segundo2){
+                      resultado = true;
+                      }
+                  }
+              }
+          }
+        }
+    }
   }
   return resultado;
 }

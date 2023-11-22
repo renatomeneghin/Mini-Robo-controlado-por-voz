@@ -11,10 +11,10 @@ public:
     void readCalendar (int *m, int *d, int *y);
     void advance ();
     friend void operator ++ (Calendar&);
-    friend bool operator == ( Calendar&, Calendar&);
-    friend bool operator < ( Calendar&, Calendar&);
-    friend bool operator > ( Calendar&, Calendar&);
-    friend bool operator != ( Calendar&, Calendar&);
+    bool operator == (const Calendar&) const;
+    bool operator < (const Calendar&) const;
+    bool operator > (const Calendar&) const;
+    bool operator != (const Calendar&) const;
 };
 
 

@@ -11,11 +11,13 @@ public:
   ClockCalendar (int mt, int d, int y, int h, int m, int s, int pm);
   ~ClockCalendar();
   void advance ();
+  bool greater_than(ClockCalendar);
+  bool smaller_than(ClockCalendar);
   friend void operator++ (ClockCalendar&);
-  friend bool operator == (ClockCalendar&,ClockCalendar&);
-  friend bool operator < (ClockCalendar&,ClockCalendar&);
-  friend bool operator > (ClockCalendar&,ClockCalendar&);
-  friend bool operator != (ClockCalendar&,ClockCalendar&);
+  bool operator == (const ClockCalendar&) const;
+  bool operator < (const ClockCalendar&) const;
+  bool operator > (const ClockCalendar&) const;
+  bool operator != (const ClockCalendar&) const;
 };
 
 

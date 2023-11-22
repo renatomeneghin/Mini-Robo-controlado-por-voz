@@ -35,41 +35,44 @@ void Clock::advance (){
 
 void operator++ (Clock& C){C.advance();}
 
-bool operator==(Clock &clock1,Clock &clock2)
+bool Clock::operator==(const Clock &clock) const
 {
-  int h1, m1, s1, p1, h2, m2, s2, p2;
-  clock1.readClock(&h1,&s1,&m1,&p1);
-  clock2.readClock(&h2,&s2,&m2,&p2);
-  return ((h1 == h2) && (m1 == m2) && (s1 == s2) && (p1 == p2));
+  int h1, m1, s1, p1;//, h2, m2, s2, p2;
+  Clock relogio = clock;
+  relogio.readClock(&h1,&s1,&m1,&p1);
+  //clock2.readClock(&h2,&s2,&m2,&p2);
+  return ((hr == h1) && (min == m1) && (sec == s1) && (is_pm == p1));
 }
 
-bool operator!=(Clock &clock1,Clock &clock2)
+bool Clock::operator!=(const Clock &clock) const
 {
-  int h1, m1, s1, p1, h2, m2, s2, p2;
-  clock1.readClock(&h1,&s1,&m1,&p1);
-  clock2.readClock(&h2,&s2,&m2,&p2);
-  return ((h1 != h2) || (m1 != m2) || (s1 != s2) || (p1 != p2));
+  int h1, m1, s1, p1;//, h2, m2, s2, p2;
+  Clock relogio = clock;
+  relogio.readClock(&h1,&s1,&m1,&p1);
+  //clock2.readClock(&h2,&s2,&m2,&p2);
+  return ((hr != h1) || (min != m1) || (sec != s1) || (is_pm != p1));
 }
 
-bool operator<(Clock &clock1,Clock &clock2)
+bool Clock::operator<(const Clock &clock) const
 {
   bool resultado = false;
-  int h1, m1, s1, p1, h2, m2, s2, p2;
-  clock1.readClock(&h1,&s1,&m1,&p1);
-  clock2.readClock(&h2,&s2,&m2,&p2);
-  if(!p1 && p2){
+  int h1, m1, s1, p1;//, h2, m2, s2, p2;
+  Clock relogio = clock;
+  relogio.readClock(&h1,&s1,&m1,&p1);
+  //clock2.readClock(&h2,&s2,&m2,&p2);
+  if(!is_pm && p1){
     resultado == true;
   }
-  else if (p1 == p2){
-    if(h1 < h2){
+  else if (is_pm == p1){
+    if(hr < h1){
       resultado = true;
     }
-    else if (h1 == h2){
-      if(m1 < m2){
+    else if (hr == h1){
+      if(min < m1){
         resultado = true;
       }
-      else if (m1 == m2){
-        if (s1 < s2){
+      else if (min == m1){
+        if (sec < s1){
           resultado = true;
           }
       }
@@ -78,25 +81,26 @@ bool operator<(Clock &clock1,Clock &clock2)
   return resultado;
 }
 
-bool operator>(Clock &clock1,Clock &clock2)
+bool Clock::operator>(const Clock &clock) const
 {
+  int h1, m1, s1, p1;//, h2, m2, s2, p2;
   bool resultado = false;
-  int h1, m1, s1, p1, h2, m2, s2, p2;
-  clock1.readClock(&h1,&s1,&m1,&p1);
-  clock2.readClock(&h2,&s2,&m2,&p2);
-  if(p1 && !p2){
+  Clock relogio = clock;
+  relogio.readClock(&h1,&s1,&m1,&p1);
+  //clock2.readClock(&h2,&s2,&m2,&p2);
+  if(is_pm && !p1){
     resultado == true;
   }
-  else if (p1 == p2){
-    if(h1 > h2){
+  else if (is_pm == p1){
+    if(hr > h1){
       resultado = true;
     }
-    else if (h1 == h2){
-      if(m1 > m2){
+    else if (hr == h1){
+      if(min > m1){
         resultado = true;
       }
-      else if (m1 == m2){
-        if (s1 > s2){
+      else if (min == m1){
+        if (sec > s1){
           resultado = true;
           }
       }

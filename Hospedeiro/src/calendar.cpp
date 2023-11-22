@@ -37,41 +37,41 @@ void Calendar::advance (){
 void operator++ (Calendar &t){t.advance();}
 
 
-bool operator==(Calendar &t,Calendar&calendar1)
+bool Calendar::operator==(const Calendar&calendar) const
 {
-  int d1, m1, a1, d2, m2, a2;
+  int d1, m1, a1;
 
-  t.readCalendar(&m1,&d1,&a1);
-  calendar1.readCalendar(&m2,&d2,&a2);
+  Calendar c = calendar;
+  c.readCalendar(&m1,&d1,&a1);
   
-  return ((a1 == a2) && (m1 == m2) && (d1 == d2));
+  return ((yr == a1) && (mo == m1) && (day == d1));
 }
 
-bool operator!=(Calendar &t,Calendar&calendar1)
+bool Calendar::operator!=(const Calendar&calendar) const
 {
-  int d1, m1, a1, d2, m2, a2;
+  int d, m, a;
 
-  t.readCalendar(&m1,&d1,&a1);
-  calendar1.readCalendar(&m2,&d2,&a2);
-  return ((a1 != a2) || (m1 != m2) || (d1 != d2));
+  Calendar c = calendar;
+  c.readCalendar(&m,&d,&a);
+  return ((yr != a) || (mo != m) || (day != d));
 }
 
-bool operator<(Calendar &t,Calendar&calendar1)
+bool Calendar::operator<(const Calendar&calendar) const
 {
   bool resultado = false;
-  int d1, m1, a1, d2, m2, a2;
+  int d, m, a;
 
-  t.readCalendar(&m1,&d1,&a1);
-  calendar1.readCalendar(&m2,&d2,&a2);
-  if(a1 < a2){
+  Calendar c = calendar;
+  c.readCalendar(&m,&d,&a);
+  if(yr < a){
     resultado = true;
   }
-  else if (a1 == a2){
-    if(m1 < m2){
+  else if (yr == a){
+    if(mo < m){
       resultado = true;
     }
-    else if (m1 == m2){
-      if (d1 < d2){
+    else if (mo == m){
+      if (day < d){
         resultado = true;
         }
     }
@@ -79,22 +79,22 @@ bool operator<(Calendar &t,Calendar&calendar1)
   return resultado;
 }
 
-bool operator>(Calendar &t,Calendar&calendar1)
+bool Calendar::operator>(const Calendar&calendar) const
 {
   bool resultado = false;
-  int d1, m1, a1, d2, m2, a2;
+  int d, m, a;
 
-  t.readCalendar(&m1,&d1,&a1);
-  calendar1.readCalendar(&m2,&d2,&a2);
-  if(a1 > a2){
+  Calendar c = calendar;
+  c.readCalendar(&m,&d,&a);
+  if(yr > a){
     resultado = true;
   }
-  else if (a1 == a2){
-    if(m1 > m2){
+  else if (yr == a){
+    if(mo > m){
       resultado = true;
     }
-    else if (m1 == m2){
-      if (d1 > d2){
+    else if (mo == m){
+      if (day > d){
         resultado = true;
         }
     }

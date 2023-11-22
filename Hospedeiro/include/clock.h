@@ -14,10 +14,11 @@ public:
   int *m, int *pm);
   void advance ();
   friend void operator++ (Clock&);
-  friend bool operator == (Clock&,Clock&);
-  friend bool operator < (Clock&,Clock&);
-  friend bool operator > (Clock&,Clock&);
-  friend bool operator != (Clock&,Clock&);
+  
+	bool operator==( const Clock& ) const;
+	bool operator!=( const Clock& ) const;
+	bool operator<( const Clock& ) const;
+	bool operator>( const Clock& ) const;
 };
 
 
