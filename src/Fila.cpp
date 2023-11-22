@@ -40,22 +40,18 @@ Dados Fila::remove(){
     
   Dados valor = (head)? head->getLog() : Dados("",ClockCalendar());
   
-    try{
-        if(head) {
-        if(head->getNext()){
-          Node* aux = head;
-          head = head->getNext();
-          delete aux;
-        }
-        else{
-          delete head;
-          head = 0;
-        }
-      } else{
-        throw "Exception:Ponteiro Nulo";
+      if(head) {
+      if(head->getNext()){
+        Node* aux = head;
+        head = head->getNext();
+        delete aux;
       }
-    } catch (const char *s){
-      puts(s);
+      else{
+        delete head;
+        head = 0;
+      }
+    } else{
+      throw "Exception:Ponteiro Nulo";
     }
 
     

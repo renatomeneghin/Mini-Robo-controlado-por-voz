@@ -45,13 +45,13 @@ extern "C" void app_main(void) {
     while(1){
         AplicacaoPrincipal();
         //i++;
-        ESP_ERROR_CHECK(uart_write_bytes(UART_NUM_0, (const char *) ss.str().c_str(), len));
-        /* printf("%d",i);
-        if (i > 10){
+        //ESP_ERROR_CHECK(uart_write_bytes(UART_NUM_0, "Hello World", 12));
+        //printf("%d",i);
+        //if (i > 10){
             Imprimir_UART();
             //imprimirFila();
-            i = 0;
-        } */
+        //    i = 0;
+        //} */
     }    
 }
 
@@ -124,8 +124,15 @@ void imprimirFila()
     int mes, dia, ano, hora, minuto, segundo, pm, is_meiodia = 0;
     Dados data;
     for(int i = 0; i < 10; i++){
-        data = Operacoes.remove();
-
+        try{
+            data = Operacoes.remove();
+        }
+        catch(const char *s){
+            ;
+        }
+        catch(...){
+            ;
+        }
         data.Data_Hora.readCalendar(&mes, &dia, &ano);
 	    data.Data_Hora.readClock(&hora, &segundo, &minuto, &pm);
 	    is_meiodia = (pm)? 1 : 0;
@@ -174,24 +181,33 @@ void Imprimir_UART(){
     Dados data;
     //printf("Estou Aqui! UART...");
     for(int i = 0; i < 10; i++){
-        data = Operacoes.remove();
+        try{
+            data = Operacoes.remove();
+        }
+        catch(const char *s){
+            ;
+        }
+        catch(...){
+            ;
+        }
         stringstream ss;
 
         data.Data_Hora.readCalendar(&mes, &dia, &ano);
 	    data.Data_Hora.readClock(&hora, &segundo, &minuto, &pm);
 	    is_meiodia = (pm)? 1 : 0;
 
-	    ss  << "Operação Executada: " << data.Operacao << std::endl 
+	    /* ss  << "Operação Executada: " << data.Operacao << std::endl 
             << "Data: " << std::setfill('0') << std::setw(2) << dia 
             << "/" << std::setfill('0') << std::setw(2) << mes << "/" << ano
 	        << "\t Hora: " << std::setfill('0') << std::setw(2) << hora << ":" 
             << std::setfill('0') << std::setw(2) << minuto << ":" 
             << std::setfill('0') << std::setw(2) << segundo << " " 
 	      	<< meiodia[is_meiodia] << std::endl << std::endl;
-    
+     */
+        ss << "Hello World!\n";
         // Read data from the UART
         int len = ss.gcount();
-        printf("%d",len);
+        //printf("%d",len);
         // Write data back to the UART
         std::cout << ss.str().c_str();
         ESP_ERROR_CHECK(uart_write_bytes(UART_NUM_0, (const char *) ss.str().c_str(), len));
