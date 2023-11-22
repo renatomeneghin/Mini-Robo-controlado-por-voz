@@ -3,11 +3,9 @@
 #include <iomanip>
 #include <unistd.h>
 #include <pthread.h>
-#include <thread>
 #include <inttypes.h>
 #include <sstream>
 #include <string>
-#include <chrono>
 #include <memory>
 #include <esp_pthread.h>
 
@@ -47,7 +45,7 @@ static void Carro_ParaEsquerda(void *args);
 static void Carro_ParaDireita(void *args);
 static void Carro_Parar(void *args);
 void AplicacaoPrincipal();
-void AtualizarClock(); 
+static void AtualizarClock(void *args); 
 void imprimirFila();
 void Imprimir_UART();
 void UART_init();

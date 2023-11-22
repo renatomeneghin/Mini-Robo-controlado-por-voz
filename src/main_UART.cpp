@@ -38,17 +38,20 @@ extern "C" void app_main(void) {
     esp_pthread_set_cfg(&cfg);
 
 
-    std::thread Relogio(AtualizarClock);
+    xTaskCreate(AtualizarClock,"Relogio",1024,NULL,25,NULL);
     
     int i = 0;
+    puts("Cheguei no loop");
     while(1){
         AplicacaoPrincipal();
-        i++;
+        //i++;
+        ESP_ERROR_CHECK(uart_write_bytes(UART_NUM_0, (const char *) ss.str().c_str(), len));
+        /* printf("%d",i);
         if (i > 10){
             Imprimir_UART();
-            imprimirFila(NULL);
+            //imprimirFila();
             i = 0;
-        }
+        } */
     }    
 }
 
@@ -135,11 +138,11 @@ void imprimirFila()
             << std::setfill('0') << std::setw(2) << segundo << " " 
 	      	<< meiodia[is_meiodia] << std::endl << std::endl;
     }
-    vTaskDelete(NULL);
+    //vTaskDelete(NULL);
 }
 
 void UART_init(){
-    const uart_port_t uart_num = UART_NUM_2;
+    const uart_port_t uart_num = UART_NUM_0;
     uart_config_t uart_config = {
         .baud_rate = 115200,
         .data_bits = UART_DATA_8_BITS,
@@ -147,17 +150,19 @@ void UART_init(){
         .stop_bits = UART_STOP_BITS_1,
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
         .source_clk = UART_SCLK_DEFAULT,
-};
-    const int uart_buffer_size = (1024 * 2);
-    QueueHandle_t uart_queue;
-    
+    };
+    const int uart_buffer_size = (2048 * 2);
+    //QueueHandle_t uart_queue;
+    //puts("Estou no UART_init");
     // Configure UART parameters
     // Set UART pins(TX: IO4, RX: IO5, RTS: IO18, CTS: IO19)
     // Setup UART buffered IO with event queue
     // Install UART driver using an event queue here
     ESP_ERROR_CHECK(uart_param_config(uart_num, &uart_config));
-    ESP_ERROR_CHECK(uart_set_pin(uart_num, 16, 17, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
-    ESP_ERROR_CHECK(uart_driver_install(uart_num, uart_buffer_size, uart_buffer_size, 0, NULL, 0));
+    ESP_ERROR_CHECK(uart_set_pin(uart_num, GPIO_NUM_1, GPIO_NUM_3, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
+    ESP_ERROR_CHECK(uart_driver_install(uart_num, uart_buffer_size*2,uart_buffer_size*2, 0, NULL, 0));
+    
+    
 }
 
 
@@ -167,8 +172,9 @@ void Imprimir_UART(){
     char meiodia[2][3] = {"AM", "PM"};
     int mes, dia, ano, hora, minuto, segundo, pm, is_meiodia = 0;
     Dados data;
+    //printf("Estou Aqui! UART...");
     for(int i = 0; i < 10; i++){
-        data = Operacoes.read();
+        data = Operacoes.remove();
         stringstream ss;
 
         data.Data_Hora.readCalendar(&mes, &dia, &ano);
@@ -185,11 +191,13 @@ void Imprimir_UART(){
     
         // Read data from the UART
         int len = ss.gcount();
+        printf("%d",len);
         // Write data back to the UART
-        uart_write_bytes(UART_NUM_2, (const char *) ss.str().c_str(), len);
+        std::cout << ss.str().c_str();
+        ESP_ERROR_CHECK(uart_write_bytes(UART_NUM_0, (const char *) ss.str().c_str(), len));
         
     }
-    vTaskDelete(NULL);
+    //vTaskDelete(NULL);
 }
 
 
