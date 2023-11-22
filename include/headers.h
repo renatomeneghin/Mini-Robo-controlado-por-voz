@@ -1,17 +1,31 @@
 #include <stdio.h>
 #include <iostream>
 #include <iomanip>
-#include <edge-impulse-sdk/classifier/ei_run_classifier.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <thread>
 #include <inttypes.h>
+#include <sstream>
+#include <string>
+#include <chrono>
+#include <memory>
+#include <esp_pthread.h>
+
+#include <edge-impulse-sdk/classifier/ei_run_classifier.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"
 #include "esp_pthread.h"
 #include "esp_timer.h"
+#include "driver/uart.h"
 #include "../include/Driver_Motores.h"
 #include "../include/MicrofoneI2S.h"
 #include "../include/Fila.h"
 #include "../include/clockcalendar.h"
+
+#include "driver/gpio.h"
+#include "sdkconfig.h"
+#include "esp_log.h"
 
 using namespace std;
 
@@ -33,5 +47,7 @@ static void Carro_ParaEsquerda(void *args);
 static void Carro_ParaDireita(void *args);
 static void Carro_Parar(void *args);
 void AplicacaoPrincipal();
-static void AtualizarClock(void *args);
-static void imprimirFila(void *args);
+void AtualizarClock(); 
+void imprimirFila();
+void Imprimir_UART();
+void UART_init();

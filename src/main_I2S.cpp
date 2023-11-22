@@ -1,34 +1,17 @@
 
 
-//#include <cstdlib.h>
-//#include <time.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <inttypes.h>
-#include "driver/gpio.h"
-#include "driver/ledc.h"
-#include "freertos/FreeRTOS.h"
-#include "driver/i2s.h"
-#include "freertos/queue.h"
-//#include "driver/i2s_std.h"
-#include "esp_err.h"
-#include "freertos/task.h"
-#include "esp_pthread.h"
-#include "esp_timer.h"
-#include "../include/Driver_Motores.h"
-#include "../include/MicrofoneI2S.h"
+#include "include/headers.h"
 
 //using namespace std;
 
 
-/* void blink_LED1(){
+void blink_LED1(){
     volatile int *GPIO_OUTPUT = (volatile int *)0x3ff44004;
     while(1){
         *(GPIO_OUTPUT) ^= (1<<5);
         vTaskDelay(1000/ portTICK_PERIOD_MS);
     }
-} */
+} 
 /* 
 void blink_LED2(){
     volatile int *GPIO_OUTPUT = (volatile int *)0x3ff44004;
@@ -308,9 +291,10 @@ extern "C" void app_main(void) {
     esp_pthread_set_cfg(&cfg);
 
 
-    //std::thread any_core(blink_LED1);
+    std::thread any_core(blink_LED1);
+
     xTaskCreate(I2S_data2,"I2S",4096,NULL,5,NULL);
     vTaskDelay(500/ portTICK_PERIOD_MS);
-    xTaskCreate(PWM_Class,"PWM",4096, NULL, 5, NULL);
+    //xTaskCreate(PWM_Class,"PWM",4096, NULL, 5, NULL);
     //while(1);
 }
