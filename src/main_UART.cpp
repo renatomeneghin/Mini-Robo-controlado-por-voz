@@ -44,14 +44,14 @@ extern "C" void app_main(void) {
     puts("Cheguei no loop");
     while(1){
         AplicacaoPrincipal();
-        //i++;
+        i++;
         //ESP_ERROR_CHECK(uart_write_bytes(UART_NUM_0, "Hello World", 12));
         //printf("%d",i);
-        //if (i > 10){
-            Imprimir_UART();
+        if (i > 10){
+            xTaskCreate(Imprimir_UART,"UART",8192,NULL,5,NULL);
             //imprimirFila();
-        //    i = 0;
-        //} */
+            i = 0;
+        } 
     }    
 }
 
@@ -173,7 +173,7 @@ void UART_init(){
 }
 
 
-void Imprimir_UART(){
+static void Imprimir_UART(void *args){
     //uint8_t *data = (uint8_t *) malloc(2048);
 
     char meiodia[2][3] = {"AM", "PM"};
@@ -196,15 +196,12 @@ void Imprimir_UART(){
 	    data.Data_Hora.readClock(&hora, &segundo, &minuto, &pm);
 	    is_meiodia = (pm)? 1 : 0;
 
-	    /* ss  << "Operação Executada: " << data.Operacao << std::endl 
-            << "Data: " << std::setfill('0') << std::setw(2) << dia 
-            << "/" << std::setfill('0') << std::setw(2) << mes << "/" << ano
-	        << "\t Hora: " << std::setfill('0') << std::setw(2) << hora << ":" 
-            << std::setfill('0') << std::setw(2) << minuto << ":" 
-            << std::setfill('0') << std::setw(2) << segundo << " " 
-	      	<< meiodia[is_meiodia] << std::endl << std::endl;
-     */
-        ss << "Hello World!\n";
+	     ss  << data.Operacao << ";" 
+            << dia << ";" << mes << ";" << ano
+	        << ";" << hora << ";" << minuto << ";" << segundo 
+            << ";" << meiodia[is_meiodia] << std::endl;
+     
+        //ss << "Hello World!\n";
         // Read data from the UART
         int len = ss.gcount();
         //printf("%d",len);
@@ -213,29 +210,5 @@ void Imprimir_UART(){
         ESP_ERROR_CHECK(uart_write_bytes(UART_NUM_0, (const char *) ss.str().c_str(), len));
         
     }
-    //vTaskDelete(NULL);
+    vTaskDelete(NULL);
 }
-
-
-
-
-    /* Configure parameters of an UART driver,
-     * communication pins and install the driver */
-    /* uart_config_t uart_config = {
-        .baud_rate = ECHO_UART_BAUD_RATE,
-        .data_bits = UART_DATA_8_BITS,
-        .parity    = UART_PARITY_DISABLE,
-        .stop_bits = UART_STOP_BITS_1,
-        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
-        .source_clk = UART_SCLK_DEFAULT,
-    };
-    int intr_alloc_flags = 0;
-
-#if CONFIG_UART_ISR_IN_IRAM
-    intr_alloc_flags = ESP_INTR_FLAG_IRAM;
-#endif
-
-    ESP_ERROR_CHECK(uart_driver_install(ECHO_UART_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
-    ESP_ERROR_CHECK(uart_param_config(ECHO_UART_PORT_NUM, &uart_config));
-    ESP_ERROR_CHECK(uart_set_pin(ECHO_UART_PORT_NUM, ECHO_TEST_TXD, ECHO_TEST_RXD, ECHO_TEST_RTS, ECHO_TEST_CTS));
- */

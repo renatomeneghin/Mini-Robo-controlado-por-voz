@@ -27,7 +27,7 @@
 
 using namespace std;
 
-ClockCalendar *cc = new ClockCalendar(11,18,2023,20,0,0,true);
+ClockCalendar *cc = new ClockCalendar(11,18,2023,8,0,0,true);
 Fila Operacoes;
 Motor *motor1 = new Driver_motor(4,5);
 Motor *motor2 = new Driver_motor(18,19);
@@ -47,5 +47,5 @@ static void Carro_Parar(void *args);
 void AplicacaoPrincipal();
 static void AtualizarClock(void *args); 
 void imprimirFila();
-void Imprimir_UART();
+static void Imprimir_UART(void *args);
 void UART_init();

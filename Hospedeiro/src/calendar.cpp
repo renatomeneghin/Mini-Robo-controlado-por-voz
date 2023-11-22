@@ -1,4 +1,4 @@
-#include "calendar.h"
+#include "../include/calendar.h"
 // int mo, day, yr;
 
 Calendar::Calendar (int m, int d, int y){
@@ -36,34 +36,42 @@ void Calendar::advance (){
 
 void operator++ (Calendar &t){t.advance();}
 
-bool operator==(const Calendar &t)
+
+bool operator==(Calendar &t,Calendar&calendar1)
 {
-  int d, m, a;
-  t.readCalendar(&m,&d,&a);
-  return ((this->yr == a) && (this->mo == m) && (this->day == d));
+  int d1, m1, a1, d2, m2, a2;
+
+  t.readCalendar(&m1,&d1,&a1);
+  calendar1.readCalendar(&m2,&d2,&a2);
+  
+  return ((a1 == a2) && (m1 == m2) && (d1 == d2));
 }
 
-bool operator!=(const Calendar &t)
+bool operator!=(Calendar &t,Calendar&calendar1)
 {
-  int d, m, a;
-  t.readCalendar(&m,&d,&a);
-  return ((this->yr != a) || (this->mo != m) || (this->day != d));
+  int d1, m1, a1, d2, m2, a2;
+
+  t.readCalendar(&m1,&d1,&a1);
+  calendar1.readCalendar(&m2,&d2,&a2);
+  return ((a1 != a2) || (m1 != m2) || (d1 != d2));
 }
 
-bool operator<(const Calendar &t)
+bool operator<(Calendar &t,Calendar&calendar1)
 {
   bool resultado = false;
-  int d, m, a;
-  t.readCalendar(&m,&d,&a);
-  if(this->yr < a){
+  int d1, m1, a1, d2, m2, a2;
+
+  t.readCalendar(&m1,&d1,&a1);
+  calendar1.readCalendar(&m2,&d2,&a2);
+  if(a1 < a2){
     resultado = true;
   }
-  else if (this->yr == a){
-    if(this->mo < m){
+  else if (a1 == a2){
+    if(m1 < m2){
       resultado = true;
     }
-    else if (this->mo == m){
-      if (this->day < d){
+    else if (m1 == m2){
+      if (d1 < d2){
         resultado = true;
         }
     }
@@ -71,20 +79,22 @@ bool operator<(const Calendar &t)
   return resultado;
 }
 
-bool operator>(const Calendar &t)
+bool operator>(Calendar &t,Calendar&calendar1)
 {
   bool resultado = false;
-  int d, m, a;
-  t.readCalendar(&m,&d,&a);
-  if(this->yr > a){
+  int d1, m1, a1, d2, m2, a2;
+
+  t.readCalendar(&m1,&d1,&a1);
+  calendar1.readCalendar(&m2,&d2,&a2);
+  if(a1 > a2){
     resultado = true;
   }
-  else if (this->yr == a){
-    if(this->mo > m){
+  else if (a1 == a2){
+    if(m1 > m2){
       resultado = true;
     }
-    else if (this->mo == m){
-      if (this->day > d){
+    else if (m1 == m2){
+      if (d1 > d2){
         resultado = true;
         }
     }
