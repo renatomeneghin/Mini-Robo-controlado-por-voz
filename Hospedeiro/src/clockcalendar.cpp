@@ -62,8 +62,6 @@ bool ClockCalendar::operator>(const ClockCalendar &cc) const
   ClockCalendar c(cc);
   c.readCalendar(&mes,&dia,&ano);  
   c.readClock(&hora,&segundo,&minuto,&pm);
-  //cc2.readCalendar(&m2,&d2,&a2);  
-  //cc2.readClock(&h2,&s2,&mn2,&p2);
   Calendar c1(mo,day,yr),c2(mes,dia,ano); 
   Clock cl1(hr,sec,min,is_pm), cl2(hora,segundo,minuto,pm);
   if(c1 > c2){
