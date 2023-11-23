@@ -1,6 +1,6 @@
 #ifndef CLOCK_H_INCLUDED
 #define CLOCK_H_INCLUDED
-#pragma once
+//#pragma once
 
 class Clock {
 protected:

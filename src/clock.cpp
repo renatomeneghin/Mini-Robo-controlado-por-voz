@@ -33,4 +33,76 @@ void Clock::advance (){
   mudanca = (hr != 12);  
 }
 
-void operator++ (Clock& C){C.advance();}
+bool Clock::operator==(const Clock &clock) const
+{
+  int h1, m1, s1, p1;//, h2, m2, s2, p2;
+  Clock relogio = clock;
+  relogio.readClock(&h1,&s1,&m1,&p1);
+  //clock2.readClock(&h2,&s2,&m2,&p2);
+  return ((hr == h1) && (min == m1) && (sec == s1) && (is_pm == p1));
+}
+
+bool Clock::operator!=(const Clock &clock) const
+{
+  int h1, m1, s1, p1;//, h2, m2, s2, p2;
+  Clock relogio = clock;
+  relogio.readClock(&h1,&s1,&m1,&p1);
+  //clock2.readClock(&h2,&s2,&m2,&p2);
+  return ((hr != h1) || (min != m1) || (sec != s1) || (is_pm != p1));
+}
+
+bool Clock::operator<(const Clock &clock) const
+{
+  bool resultado = false;
+  int h1, m1, s1, p1;//, h2, m2, s2, p2;
+  Clock relogio = clock;
+  relogio.readClock(&h1,&s1,&m1,&p1);
+  //clock2.readClock(&h2,&s2,&m2,&p2);
+  if(!is_pm && p1){
+    resultado == true;
+  }
+  else if (is_pm == p1){
+    if(hr < h1){
+      resultado = true;
+    }
+    else if (hr == h1){
+      if(min < m1){
+        resultado = true;
+      }
+      else if (min == m1){
+        if (sec < s1){
+          resultado = true;
+          }
+      }
+    }
+  }
+  return resultado;
+}
+
+bool Clock::operator>(const Clock &clock) const
+{
+  int h1, m1, s1, p1;//, h2, m2, s2, p2;
+  bool resultado = false;
+  Clock relogio = clock;
+  relogio.readClock(&h1,&s1,&m1,&p1);
+  //clock2.readClock(&h2,&s2,&m2,&p2);
+  if(is_pm && !p1){
+    resultado == true;
+  }
+  else if (is_pm == p1){
+    if(hr > h1){
+      resultado = true;
+    }
+    else if (hr == h1){
+      if(min > m1){
+        resultado = true;
+      }
+      else if (min == m1){
+        if (sec > s1){
+          resultado = true;
+          }
+      }
+    }
+  }
+  return resultado;
+}

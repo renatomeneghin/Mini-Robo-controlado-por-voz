@@ -1,6 +1,6 @@
 #ifndef CLOCKCALENDAR_H_INCLUDED
 #define CLOCKCALENDAR_H_INCLUDED
-#pragma once
+//#pragma once
 
 #include "clock.h"
 #include "calendar.h"

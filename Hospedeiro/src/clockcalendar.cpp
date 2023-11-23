@@ -28,7 +28,7 @@ bool ClockCalendar::operator==(const ClockCalendar &cc) const
 bool ClockCalendar::operator!=(const ClockCalendar &cc) const
 {
   int dia, mes, ano, hora, minuto, segundo, pm;
-  ClockCalendar c = cc;
+  ClockCalendar c(cc);
   c.readCalendar(&mes,&dia,&ano);  
   c.readClock(&hora,&segundo,&minuto,&pm);
   //cc2.readCalendar(&m2,&d2,&a2);  
@@ -40,7 +40,7 @@ bool ClockCalendar::operator<(const ClockCalendar &cc) const
 {
   bool resultado = false;
   int dia, mes, ano, hora, minuto, segundo, pm;
-  ClockCalendar c = cc;
+  ClockCalendar c(cc);
   c.readCalendar(&mes,&dia,&ano);  
   c.readClock(&hora,&segundo,&minuto,&pm);
   //cc2.readCalendar(&m2,&d2,&a2);  
@@ -59,7 +59,7 @@ bool ClockCalendar::operator>(const ClockCalendar &cc) const
 {
   bool resultado = false;
   int dia, mes, ano, hora, minuto, segundo, pm;
-  ClockCalendar c = cc;
+  ClockCalendar c(cc);
   c.readCalendar(&mes,&dia,&ano);  
   c.readClock(&hora,&segundo,&minuto,&pm);
   //cc2.readCalendar(&m2,&d2,&a2);  
@@ -92,26 +92,26 @@ bool ClockCalendar::greater_than(ClockCalendar cc1){
       if (dia > dia2){
         resultado = true;
         }
-        else if(dia == dia2){ 
-          if(pm && !pm2){
+      else if(dia == dia2){ 
+        if(pm && !pm2){
             resultado == true;
-          }
-          else if (pm == pm2){
-            if(hora > hora2){
+        }
+        else if (pm == pm2){
+          if(hora > hora2){
               resultado = true;
+            }
+          else if (hora == hora2){
+            if(minuto > minuto2){
+              resultado = true;
+            }
+            else if (minuto == minuto2){
+              if (segundo > segundo2){
+                resultado = true;
               }
-              else if (hora == hora2){
-                if(minuto > minuto2){
-                  resultado = true;
-                  }
-                  else if (minuto == minuto2){
-                    if (segundo > segundo2){
-                      resultado = true;
-                      }
-                  }
-              }
+            }
           }
         }
+      }
     }
   }
   return resultado;

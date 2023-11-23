@@ -60,10 +60,10 @@ bool Clock::operator<(const Clock &clock) const
   Clock relogio = clock;
   relogio.readClock(&h1,&s1,&m1,&p1);
   //clock2.readClock(&h2,&s2,&m2,&p2);
-  if(!is_pm && p1){
+  if(!bool(is_pm) && bool(p1)){
     resultado == true;
   }
-  else if (is_pm == p1){
+  else if (bool(is_pm) == bool(p1)){
     if(hr < h1){
       resultado = true;
     }
@@ -88,10 +88,10 @@ bool Clock::operator>(const Clock &clock) const
   Clock relogio = clock;
   relogio.readClock(&h1,&s1,&m1,&p1);
   //clock2.readClock(&h2,&s2,&m2,&p2);
-  if(is_pm && !p1){
+  if(bool(is_pm) && !bool(p1)){
     resultado == true;
   }
-  else if (is_pm == p1){
+  else if (bool(is_pm) == bool(p1)){
     if(hr > h1){
       resultado = true;
     }

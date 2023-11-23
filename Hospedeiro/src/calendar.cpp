@@ -96,7 +96,7 @@ bool Calendar::operator>(const Calendar&calendar) const
     else if (mo == m){
       if (day > d){
         resultado = true;
-        }
+      }
     }
   }
   return resultado;

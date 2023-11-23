@@ -25,6 +25,8 @@
    Data da ultima alteracao: 8 de outubro de 2015.
 
 */
+#ifndef LISTA_H_INCLUDED
+#define LISTA_H_INCLUDED
 
 #include "Node.h"
 
@@ -42,3 +44,5 @@ public:
   void insertionSort(Dados value);
   Dados removeNode(Dados dat);
 };
+
+#endif
