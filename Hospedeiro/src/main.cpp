@@ -8,8 +8,10 @@
 using namespace std;
 //#include "../include/clockcalendar.h"
 #include "../include/Lista.h"
+#include "../include/Serial.h"
 
 //ClockCalendar cc1(11,18,2023,8,0,0,true);
+mySerial Serial("/dev/ttyUSB0",115200);
 List dados;
 
 void ler_arquivo(const char*);
@@ -19,7 +21,7 @@ void imprimir_calendario(ClockCalendar cc);
 void listar_intervalo();
 
 int main(){
-
+    
     while(1){
         try{
             ler_arquivo("Dados_Sinteticos.txt");
