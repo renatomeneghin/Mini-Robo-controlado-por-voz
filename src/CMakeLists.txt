@@ -21,7 +21,7 @@ FILE(GLOB_RECURSE app_sources
     ${CMAKE_SOURCE_DIR}/src/Driver_Motores.cpp
     ${CMAKE_SOURCE_DIR}/src/Microfone.cpp
     ${CMAKE_SOURCE_DIR}/src/MicrofoneI2S.cpp
-    ${CMAKE_SOURCE_DIR}/src/main_UART.cpp 
+    ${CMAKE_SOURCE_DIR}/src/main_BLE.cpp 
     )
 
 idf_component_register(SRCS ${app_sources})
