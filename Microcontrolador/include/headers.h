@@ -1,25 +1,38 @@
 #include <stdio.h>
-#include <iostream>
-#include <iomanip>
+//#include <iostream>
+//#include <iomanip>
 #include <unistd.h>
 #include <pthread.h>
 #include <inttypes.h>
-#include <sstream>
-#include <string>
-#include <memory>
+//#include <sstream>
+//#include <string>
+//#include <memory>
 #include <esp_pthread.h>
+#include <stdlib.h>
+#include <string.h>
+#include "esp_system.h"
+#include "nvs_flash.h"
 
-#include <edge-impulse-sdk/classifier/ei_run_classifier.h>
+#include "esp_bt.h"
+#include "esp_gap_ble_api.h"
+#include "esp_gatts_api.h"
+#include "esp_bt_defs.h"
+#include "esp_bt_main.h"
+#include "esp_gatt_common_api.h"
+
+
+//#include <edge-impulse-sdk/classifier/ei_run_classifier.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
+#include "freertos/event_groups.h"
 #include "freertos/task.h"
 #include "esp_pthread.h"
 #include "esp_timer.h"
 #include "driver/uart.h"
-#include "../include/Driver_Motores.h"
-#include "../include/MicrofoneI2S.h"
-#include "../include/Fila.h"
-#include "../include/clockcalendar.h"
+//#include "../include/Driver_Motores.h"
+//#include "../include/MicrofoneI2S.h"
+//#include "../include/Fila.h"
+//#include "../include/clockcalendar.h"
 
 #include "driver/gpio.h"
 #include "sdkconfig.h"

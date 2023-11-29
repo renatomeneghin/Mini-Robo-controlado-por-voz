@@ -1,6 +1,6 @@
 #ifndef CLOCK_H_INCLUDED
 #define CLOCK_H_INCLUDED
-#pragma once
+//#pragma once
 
 class Clock {
 protected:
@@ -13,7 +13,13 @@ public:
   void readClock (int *h, int *s,
   int *m, int *pm);
   void advance ();
+  void subtract(Clock);
   friend void operator++ (Clock&);
+  friend Clock operator-(const Clock&,const Clock&);
+  bool operator==( const Clock& ) const;
+  bool operator!=( const Clock& ) const;
+  bool operator<( const Clock& ) const;
+  bool operator>( const Clock& ) const;
 };
 
 
