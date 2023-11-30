@@ -1,4 +1,4 @@
-#include "clock.h"
+#include "../include/clock.h"
 // int hr, min, sec, is_pm;
 
 Clock::Clock (int h, int s, int m, int pm){
@@ -33,6 +33,32 @@ void Clock::advance (){
   mudanca = (hr != 12);  
 }
 
+void Clock::subtract(Clock relogio1){
+  int hora, minuto, segundo, pm;
+  relogio1.readClock(&hora,&segundo,&minuto,&pm);
+  this->hr = (this->hr + 12 * bool(this->is_pm))-(hora + 12 * bool(pm));
+  this->min -= minuto;
+  this->sec -= segundo;
+
+  while (this->sec < 0){
+    this->min--;
+    this->sec += 60;
+  }
+  while (this->min < 0){
+    this->hr--;
+    this->min += 60;
+  }
+
+}
+
+void operator++ (Clock& C){C.advance();}
+
+Clock operator-(const Clock &clock1,const Clock &clock2) {
+  Clock temp = clock1;
+  temp.subtract(clock2);
+  return temp;
+}
+
 bool Clock::operator==(const Clock &clock) const
 {
   int h1, m1, s1, p1;//, h2, m2, s2, p2;
@@ -58,10 +84,10 @@ bool Clock::operator<(const Clock &clock) const
   Clock relogio = clock;
   relogio.readClock(&h1,&s1,&m1,&p1);
   //clock2.readClock(&h2,&s2,&m2,&p2);
-  if(!is_pm && p1){
+  if(!bool(is_pm) && bool(p1)){
     resultado == true;
   }
-  else if (is_pm == p1){
+  else if (bool(is_pm) == bool(p1)){
     if(hr < h1){
       resultado = true;
     }
@@ -86,10 +112,10 @@ bool Clock::operator>(const Clock &clock) const
   Clock relogio = clock;
   relogio.readClock(&h1,&s1,&m1,&p1);
   //clock2.readClock(&h2,&s2,&m2,&p2);
-  if(is_pm && !p1){
+  if(bool(is_pm) && !bool(p1)){
     resultado == true;
   }
-  else if (is_pm == p1){
+  else if (bool(is_pm) == bool(p1)){
     if(hr > h1){
       resultado = true;
     }
