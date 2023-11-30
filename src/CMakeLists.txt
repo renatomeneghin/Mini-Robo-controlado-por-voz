@@ -2,7 +2,7 @@
 # without default 'CMakeLists.txt' file.
 
 FILE(GLOB_RECURSE app_sources
-    ${CMAKE_SOURCE_DIR}/cpp_utils/*.*
+    #${CMAKE_SOURCE_DIR}/cpp_utils/*.*
     #${CMAKE_SOURCE_DIR}/include/calendar.h
     #${CMAKE_SOURCE_DIR}/include/clock.h
     #${CMAKE_SOURCE_DIR}/include/clockcalendar.h
@@ -25,8 +25,8 @@ FILE(GLOB_RECURSE app_sources
     #${CMAKE_SOURCE_DIR}/src/example_BLE.*
     #${CMAKE_SOURCE_DIR}/src/ble_mesh_example_init.* 
     #${CMAKE_SOURCE_DIR}/src/board.* 
-    #${CMAKE_SOURCE_DIR}/src/example_BLE.* 
-    ${CMAKE_SOURCE_DIR}/src/main_BLE.* 
+    ${CMAKE_SOURCE_DIR}/src/example_BLE.* 
+    #${CMAKE_SOURCE_DIR}/src/main_BLE.* 
     )
 
 idf_component_register(SRCS ${app_sources})
