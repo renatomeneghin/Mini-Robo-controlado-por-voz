@@ -104,7 +104,7 @@ void HttpResponse::sendData(std::string data) {
 } // sendData
 
 void HttpResponse::sendData(uint8_t* pData, size_t size) {
-	ESP_LOGD(LOG_TAG, ">> sendData: 0x%x, size: %d", (uint32_t) pData, size);
+	ESP_LOGD(LOG_TAG, ">> sendData: 0x%lx, size: %d", (uint32_t) pData, size);
 	// If the request is already closed, nothing further to do.
 	if (m_request->isClosed()) {
 		ESP_LOGE(LOG_TAG, "<< sendData: Request to send more data but the request/response is already closed");

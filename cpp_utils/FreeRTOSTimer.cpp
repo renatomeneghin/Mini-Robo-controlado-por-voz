@@ -120,7 +120,7 @@ void FreeRTOSTimer::changePeriod(TickType_t newPeriod, TickType_t blockTime) {
  * @return The name of the timer.
  */
 const char* FreeRTOSTimer::getName() {
-	return ::pcTimerGetName(timerHandle)
+	return ::pcTimerGetName(timerHandle);
 	//return ::pcTimerGetTimerName(timerHandle);
 } // getName
 
