@@ -93,10 +93,9 @@ class MyCallbacks: public BLECharacteristicCallbacks {
 void connectedTask (void * parameter){
     for(;;) {
         if (deviceConnected) {
-            pTxCharacteristic->setValue(&txValue, 1);
+            pTxCharacteristic->setValue("Hello World!\n");
             pTxCharacteristic->notify();
-            txValue++;
-        }
+            }
 
         // disconnecting
         if (!deviceConnected && oldDeviceConnected) {
@@ -134,7 +133,7 @@ void app_main(void) {
                                         BLECharacteristic::PROPERTY_NOTIFY
                                         );
                                     **********************************************/
-                                        NIMBLE_PROPERTY::NOTIFY
+                                        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE
                                        );
 
   /***************************************************
@@ -151,7 +150,7 @@ void app_main(void) {
                                             BLECharacteristic::PROPERTY_WRITE
                                             );
                                     *********************************************/
-                                            NIMBLE_PROPERTY::WRITE
+                                            NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE
                                             );
 
   pRxCharacteristic->setCallbacks(new MyCallbacks());
