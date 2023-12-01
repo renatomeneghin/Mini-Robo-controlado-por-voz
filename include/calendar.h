@@ -1,6 +1,6 @@
 #ifndef CALENDAR_H_INCLUDED
 #define CALENDAR_H_INCLUDED
-#pragma once
+//#pragma once
 
 class Calendar {
 protected:
@@ -10,7 +10,13 @@ public:
     void setCalendar (int m, int d, int y);
     void readCalendar (int *m, int *d, int *y);
     void advance ();
+    void subtract(Calendar);
     friend void operator ++ (Calendar&);
+    friend Calendar operator - (const Calendar&, const Calendar&);
+    bool operator == (const Calendar&) const;
+    bool operator < (const Calendar&) const;
+    bool operator > (const Calendar&) const;
+    bool operator != (const Calendar&) const;
 };
 
 
