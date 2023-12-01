@@ -11,16 +11,17 @@
 #define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
 #define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
 
-class BLE: public BLECharacteristicCallbacks {
+class BLE: public BLECharacteristicCallbacks, public BLEServerCallbacks {
   private:
-    char servername[32];
+    std::string servername;
     NimBLEServer *pServer;
+    BLEService *pService;
     NimBLECharacteristic * pTxCharacteristic;
     NimBLECharacteristic * pRxCharacteristic;
     bool deviceConnected = false;
-    bool oldDeviceConnected = false;
   public:
-    BLE(char servername[32]);
+    BLE();
+    BLE(const std::string& servername);
     ~BLE();
     void init();
     void init(const std::string& deviceName);
@@ -29,16 +30,20 @@ class BLE: public BLECharacteristicCallbacks {
     void createServer();
     void createCharacteristicRX(const std::string& characteristicUUID, uint8_t properties);
     void createCharacteristicTX(const std::string& characteristicUUID, uint8_t properties);
-    void start();
-    void getAdvertising();
-    std::string onWrite(BLECharacteristic *pCharacteristic, BLEConnInfo& connInfo);
+    void startAdvertising();
+    void stopAdvertising();
     void send(std::string data);
-    void stop();
-    char* getServerName();
+    std::string getServerName();
     void setDeviceConnected(bool connected);
     bool getDeviceConnected();
-    void setOldDeviceConnected(bool connected);
-    bool getOldDeviceConnected();
+    NimBLECharacteristic* getTxCharacteristic();
+    NimBLECharacteristic* getRxCharacteristic();
+    void onConnect(BLEServer* pServer, BLEConnInfo& connInfo);
+    void onDisconnect(BLEServer* pServer, BLEConnInfo& connInfo, int reason);
+    uint32_t onPassKeyRequest();
+    bool onConfirmPIN(uint32_t pass_key);
+    void onAuthenticationComplete(BLEConnInfo& connInfo);
+    void onWrite(BLECharacteristic *pCharacteristic, BLEConnInfo& connInfo);
 };
 
 #endif

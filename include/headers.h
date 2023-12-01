@@ -27,6 +27,7 @@
 
 using namespace std;
 
+BLE BLE_Servidor("Renato");
 ClockCalendar *cc = new ClockCalendar(11,18,2023,8,0,0,true);
 Fila Operacoes;
 Motor *motor1 = new Driver_motor(4,5);
@@ -49,3 +50,6 @@ static void AtualizarClock(void *args);
 void imprimirFila();
 static void Imprimir_UART(void *args);
 void UART_init();
+extern "C" void app_main(void);
+void imprimirDado(Dados);
+stringstream preparar_dado(Dados);

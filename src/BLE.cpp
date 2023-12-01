@@ -1,72 +1,82 @@
 #include "../include/BLE.h"
-#include "BLE.h"
 
-BLE::BLE(char servername[32]){
-    strcpy(this->servername,servername);  
+BLE::BLE()
+{
+    this->servername = "ESP32_BLE_R";
+}
+
+BLE::BLE(const std::string& servername)
+{
+    this->servername = servername;
 }
 BLE::~BLE(){
-    this->pServer->getAdvertising()->stop();
-    this->pServer->stop();
-    delete this->pServer;
+    this->stopAdvertising();
 }
 void BLE::init(){
     BLEDevice::init(this->servername);
 }
 void BLE::init(const std::string& deviceName){
-    strcpy(this->servername,deviceName.c_str());
+    this->servername = deviceName;
     BLEDevice::init(this->servername);
 }
 void BLE::initFull()
 {
-    this->init();
-    this->createServer();
-    this->createCharacteristicTX(CHARACTERISTIC_UUID_TX, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
-    this->createCharacteristicRX(CHARACTERISTIC_UUID_RX, NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
-    this->start();
-    this->getAdvertising();
+    BLEDevice::init(this->servername);
+    this->pServer = BLEDevice::createServer();
+    this->pServer->setCallbacks(this);
+    // Create the BLE Service
+    this->pService = pServer->createService(SERVICE_UUID);
+    // Create a BLE Characteristic
+    this->pTxCharacteristic = pService->createCharacteristic(
+                                                CHARACTERISTIC_UUID_TX,
+                                                NIMBLE_PROPERTY::NOTIFY                                       
+                                                );
+    
+    this->pRxCharacteristic = pService->createCharacteristic(
+                                                CHARACTERISTIC_UUID_RX, 
+                                                NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ
+                                                );
+    this->pRxCharacteristic->setCallbacks(this);
+
+    // Start the service
+    this->pService->start();
+    // Start advertising
+    this->pServer->getAdvertising()->start();
 }
 
+void BLE::initFull(const std::string& deviceName){
+    this->servername = deviceName;
+    this->initFull();
+}
 
 void BLE::createServer()
 {
     this->pServer = BLEDevice::createServer();
-    this->pServer->setCallbacks(new MyServerCallbacks());
-    BLEService *pService = pServer->createService(SERVICE_UUID);
+    this->pServer->setCallbacks(this);
+    this->pService = pServer->createService(SERVICE_UUID);
 }
 void BLE::createCharacteristicTX(const std::string& characteristicUUID, uint8_t properties){
     // Create a BLE Characteristic
-    this->pTxCharacteristic = pService->createCharacteristic(
+    this->pTxCharacteristic = this->pService->createCharacteristic(
                                         characteristicUUID,
                                         properties
                                        );
 }
 void BLE::createCharacteristicRX(const std::string& characteristicUUID, uint8_t properties){
     // Create a BLE Characteristic
-    this->pRxCharacteristic = pService->createCharacteristic(
+    this->pRxCharacteristic = this->pService->createCharacteristic(
                                             characteristicUUID,
                                             properties
                                         );
-    this->pRxCharacteristic->setCallbacks(new MyCallbacks());
+    this->pRxCharacteristic->setCallbacks(this);
 }
-void BLE::start(){
-    // Start the service
-    pService->start();
-}
-void BLE::getAdvertising(){
+
+void BLE::startAdvertising(){
     this->pServer->getAdvertising()->start();
 }
 
 void BLE::stopAdvertising(){
     this->pServer->getAdvertising()->stop();
-}
-
-void BLE::stop(){
-    this->pServer->stop();
-}
-
-std::string BLE::onWrite(BLECharacteristic *pCharacteristic, BLEConnInfo &connInfo)
-{
-    return pCharacteristic->getValue();
 }
 
 void BLE::send(std::string data)
@@ -75,8 +85,40 @@ void BLE::send(std::string data)
     pTxCharacteristic->notify();
 }
 
-char *BLE::getServerName(){return this->servername;}
+std::string BLE::getServerName(){return this->servername;}
 void BLE::setDeviceConnected(bool connected){this->deviceConnected = connected;}
 bool BLE::getDeviceConnected(){return this->deviceConnected;}
-void BLE::setOldDeviceConnected(bool connected){this->oldDeviceConnected = connected;}
-bool BLE::getOldDeviceConnected(){return this->oldDeviceConnected;}
+
+void BLE::onConnect(BLEServer *pServer, BLEConnInfo &connInfo) {
+    this->deviceConnected = true;
+};
+
+void BLE::onDisconnect(BLEServer *pServer, BLEConnInfo &connInfo, int reason) {
+    this->deviceConnected = false;
+    this->startAdvertising();
+}
+
+uint32_t BLE::onPassKeyRequest()
+{
+    printf("Server PassKeyRequest\n");
+    return 123456;
+}
+bool BLE::onConfirmPIN(uint32_t pass_key)
+{
+    printf("The passkey YES/NO number: %" PRIu32"\n", pass_key);
+    return true;
+}
+
+void BLE::onAuthenticationComplete(BLEConnInfo& connInfo){
+    printf("Starting BLE work!\n");
+}
+
+
+NimBLECharacteristic* BLE::getTxCharacteristic(){return this->pTxCharacteristic;}
+NimBLECharacteristic* BLE::getRxCharacteristic(){return this->pRxCharacteristic;}
+
+void BLE::onWrite(BLECharacteristic *pCharacteristic, BLEConnInfo &connInfo){
+    std::string rxValue = pCharacteristic->getValue();
+
+    if(rxValue.contains("Comando") && deviceConnected) {enviarFilaBLE();}
+}
