@@ -44,17 +44,6 @@ void BLE::initFull()
     this->pServer->getAdvertising()->start();
 }
 
-void BLE::initFull(const std::string& deviceName){
-    this->servername = deviceName;
-    this->initFull();
-}
-
-void BLE::createServer()
-{
-    this->pServer = BLEDevice::createServer();
-    this->pServer->setCallbacks(this);
-    this->pService = pServer->createService(SERVICE_UUID);
-}
 void BLE::createCharacteristicTX(const std::string& characteristicUUID, uint8_t properties){
     // Create a BLE Characteristic
     this->pTxCharacteristic = this->pService->createCharacteristic(
@@ -113,12 +102,11 @@ void BLE::onAuthenticationComplete(BLEConnInfo& connInfo){
     printf("Starting BLE work!\n");
 }
 
-
-NimBLECharacteristic* BLE::getTxCharacteristic(){return this->pTxCharacteristic;}
-NimBLECharacteristic* BLE::getRxCharacteristic(){return this->pRxCharacteristic;}
+void BLE::setBLEEnvio(bool envio){this->enviar = envio;}
+bool BLE::getBLEEnvio(){return this->enviar;}
 
 void BLE::onWrite(BLECharacteristic *pCharacteristic, BLEConnInfo &connInfo){
     std::string rxValue = pCharacteristic->getValue();
 
-    if(rxValue.contains("Comando") && deviceConnected) {enviarFilaBLE();}
+    if(rxValue.contains("Comando") && deviceConnected) {this->enviar = true;}
 }

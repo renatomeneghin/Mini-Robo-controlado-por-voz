@@ -45,6 +45,11 @@ void app_main(void) {
             xTaskCreate(enviarFilaBLE,"Fila",4096,NULL,2,NULL);
             i = 0;
         }
+
+        /* if (BLE_Servidor.getBLEEnvio){
+            BLE_Servidor.setBLEEnvio(false);
+            xTaskCreate(enviarFilaBLE,"UART",4096,NULL,2,NULL);
+        } */
     }    
 }
 
@@ -111,7 +116,7 @@ static void AtualizarClock(void *args){
 static void imprimirfila(void *args)
 {
     for(Dados data = Operacoes.remove();data.Operacao[0];data = Operacoes.remove()){
-        listar_um(data);
+        imprimirDado(data);
     }
     vTaskDelete(NULL);
 }

@@ -20,7 +20,7 @@
 #include "../include/MicrofoneI2S.h"
 #include "../include/Fila.h"
 #include "../include/clockcalendar.h"
-
+#include "../include/BLE.h"
 #include "driver/gpio.h"
 #include "sdkconfig.h"
 #include "esp_log.h"
@@ -53,3 +53,4 @@ void UART_init();
 extern "C" void app_main(void);
 void imprimirDado(Dados);
 stringstream preparar_dado(Dados);
+static void enviarFilaBLE(void *args);

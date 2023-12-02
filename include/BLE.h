@@ -19,6 +19,7 @@ class BLE: public BLECharacteristicCallbacks, public BLEServerCallbacks {
     NimBLECharacteristic * pTxCharacteristic;
     NimBLECharacteristic * pRxCharacteristic;
     bool deviceConnected = false;
+    bool enviar = false;
   public:
     BLE();
     BLE(const std::string& servername);
@@ -26,8 +27,6 @@ class BLE: public BLECharacteristicCallbacks, public BLEServerCallbacks {
     void init();
     void init(const std::string& deviceName);
     void initFull();
-    void initFull(const std::string& deviceName);
-    void createServer();
     void createCharacteristicRX(const std::string& characteristicUUID, uint8_t properties);
     void createCharacteristicTX(const std::string& characteristicUUID, uint8_t properties);
     void startAdvertising();
@@ -36,14 +35,14 @@ class BLE: public BLECharacteristicCallbacks, public BLEServerCallbacks {
     std::string getServerName();
     void setDeviceConnected(bool connected);
     bool getDeviceConnected();
-    NimBLECharacteristic* getTxCharacteristic();
-    NimBLECharacteristic* getRxCharacteristic();
     void onConnect(BLEServer* pServer, BLEConnInfo& connInfo);
     void onDisconnect(BLEServer* pServer, BLEConnInfo& connInfo, int reason);
     uint32_t onPassKeyRequest();
     bool onConfirmPIN(uint32_t pass_key);
     void onAuthenticationComplete(BLEConnInfo& connInfo);
     void onWrite(BLECharacteristic *pCharacteristic, BLEConnInfo& connInfo);
+    void setBLEEnvio(bool envio);
+    bool getBLEEnvio();
 };
 
 #endif
