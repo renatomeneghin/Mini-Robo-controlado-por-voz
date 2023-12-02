@@ -26,10 +26,11 @@ void AplicacaoPrincipal(){
 }
 
 
-extern "C" void app_main(void) {
+void app_main(void) {
     Mic->init();
     motor1->init();
     motor2->init();
+    BLE_Servidor.initFull();
     Operacoes.insert({"Inicializacao",*cc});
 
     xTaskCreate(AtualizarClock,"ClockCalendar",1024,NULL,20,NULL);
@@ -41,9 +42,14 @@ extern "C" void app_main(void) {
         AplicacaoPrincipal();
         i++;
         if (i > 10){
-            xTaskCreate(imprimirFila,"Fila",4096,NULL,2,NULL);
+            xTaskCreate(enviarFilaBLE,"Fila",4096,NULL,2,NULL);
             i = 0;
         }
+
+        /* if (BLE_Servidor.getBLEEnvio){
+            BLE_Servidor.setBLEEnvio(false);
+            xTaskCreate(enviarFilaBLE,"UART",4096,NULL,2,NULL);
+        } */
     }    
 }
 
@@ -107,25 +113,56 @@ static void AtualizarClock(void *args){
     vTaskDelete(NULL);
 }
 
-static void imprimirFila(void *args)
+static void imprimirfila(void *args)
+{
+    for(Dados data = Operacoes.remove();data.Operacao[0];data = Operacoes.remove()){
+        imprimirDado(data);
+    }
+    vTaskDelete(NULL);
+}
+
+
+void imprimirDado(Dados data)
 {
     char meiodia[2][3] = {"AM", "PM"};
     int mes, dia, ano, hora, minuto, segundo, pm, is_meiodia = 0;
-    Dados data;
-    for(int i = 0; i < 10; i++){
-        data = Operacoes.remove();
 
-        data.Data_Hora.readCalendar(&mes, &dia, &ano);
-	    data.Data_Hora.readClock(&hora, &segundo, &minuto, &pm);
-	    is_meiodia = (pm)? 1 : 0;
+    data = Operacoes.remove();
 
-	    std::cout << "Operação Executada: " << data.Operacao << std::endl 
-            << "Data: " << std::setfill('0') << std::setw(2) << dia 
-            << "/" << std::setfill('0') << std::setw(2) << mes << "/" << ano
-	        << "\t Hora: " << std::setfill('0') << std::setw(2) << hora << ":" 
-            << std::setfill('0') << std::setw(2) << minuto << ":" 
-            << std::setfill('0') << std::setw(2) << segundo << " " 
-	      	<< meiodia[is_meiodia] << std::endl << std::endl;
+    data.Data_Hora.readCalendar(&mes, &dia, &ano);
+    data.Data_Hora.readClock(&hora, &segundo, &minuto, &pm);
+    is_meiodia = (pm)? 1 : 0;
+
+    std::cout << "Operação Executada: " << data.Operacao << std::endl 
+        << "Data: " << std::setfill('0') << std::setw(2) << dia 
+        << "/" << std::setfill('0') << std::setw(2) << mes << "/" << ano
+        << "\t Hora: " << std::setfill('0') << std::setw(2) << hora << ":" 
+        << std::setfill('0') << std::setw(2) << minuto << ":" 
+        << std::setfill('0') << std::setw(2) << segundo << " " 
+        << meiodia[is_meiodia] << std::endl << std::endl;
+}
+
+stringstream preparar_dado(Dados data){
+    char meiodia[2][3] = {"AM", "PM"};
+    int mes, dia, ano, hora, minuto, segundo, pm, is_meiodia = 0;
+    stringstream ss;
+    data = Operacoes.remove();
+
+    data.Data_Hora.readCalendar(&mes, &dia, &ano);
+    data.Data_Hora.readClock(&hora, &segundo, &minuto, &pm);
+    is_meiodia = (pm)? 1 : 0;
+
+    ss << data.Operacao << ";" 
+        << dia << ";" << mes << ";" << ano << ";" 
+        << hora << ";" << minuto << ";" << segundo << ";" 
+        << meiodia[is_meiodia];
+
+    return ss;
+}
+
+static void enviarFilaBLE(void *args){
+    for(Dados data = Operacoes.remove();data.Operacao[0];data = Operacoes.remove()){
+        BLE_Servidor.send(preparar_dado(data).str());
+        vTaskDelay(10/portTICK_PERIOD_MS);
     }
-    vTaskDelete(NULL);
 }

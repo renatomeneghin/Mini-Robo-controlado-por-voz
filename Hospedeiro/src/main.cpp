@@ -112,7 +112,7 @@ void listar_um(Dados data){
 }
 
 void listar_tudo(){
-    for(Dados data = dados.removeFirst();data.Operacao[0];data = dados.removeFirst()){
+    for(Dados data = Operacoes.remove();data.Operacao[0];data = Operacoes.remove()){
         listar_um(data);
     }
 }

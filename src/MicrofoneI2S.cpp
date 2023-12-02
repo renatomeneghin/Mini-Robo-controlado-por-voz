@@ -1,5 +1,10 @@
 #include "../include/MicrofoneI2S.h"
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
+#include "freertos/task.h"
+#include "esp_pthread.h"
+#include "esp_timer.h"
 
 #define MAX_DMA_BUFFER 1000
 

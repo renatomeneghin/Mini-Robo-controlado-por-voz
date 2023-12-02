@@ -1,45 +1,33 @@
 #include <stdio.h>
-//#include <iostream>
-//#include <iomanip>
+#include <iostream>
+#include <iomanip>
 #include <unistd.h>
 #include <pthread.h>
 #include <inttypes.h>
-//#include <sstream>
-//#include <string>
-//#include <memory>
+#include <sstream>
+#include <string>
+#include <memory>
 #include <esp_pthread.h>
-#include <stdlib.h>
-#include <string.h>
-#include "esp_system.h"
-#include "nvs_flash.h"
 
-#include "esp_bt.h"
-#include "esp_gap_ble_api.h"
-#include "esp_gatts_api.h"
-#include "esp_bt_defs.h"
-#include "esp_bt_main.h"
-#include "esp_gatt_common_api.h"
-
-
-//#include <edge-impulse-sdk/classifier/ei_run_classifier.h>
+#include <edge-impulse-sdk/classifier/ei_run_classifier.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
-#include "freertos/event_groups.h"
 #include "freertos/task.h"
 #include "esp_pthread.h"
 #include "esp_timer.h"
 #include "driver/uart.h"
-//#include "../include/Driver_Motores.h"
-//#include "../include/MicrofoneI2S.h"
-//#include "../include/Fila.h"
-//#include "../include/clockcalendar.h"
-
+#include "../include/Driver_Motores.h"
+#include "../include/MicrofoneI2S.h"
+#include "../include/Fila.h"
+#include "../include/clockcalendar.h"
+#include "../include/BLE.h"
 #include "driver/gpio.h"
 #include "sdkconfig.h"
 #include "esp_log.h"
 
 using namespace std;
 
+BLE BLE_Servidor("Renato");
 ClockCalendar *cc = new ClockCalendar(11,18,2023,8,0,0,true);
 Fila Operacoes;
 Motor *motor1 = new Driver_motor(4,5);
@@ -62,3 +50,7 @@ static void AtualizarClock(void *args);
 void imprimirFila();
 static void Imprimir_UART(void *args);
 void UART_init();
+extern "C" void app_main(void);
+void imprimirDado(Dados);
+stringstream preparar_dado(Dados);
+static void enviarFilaBLE(void *args);

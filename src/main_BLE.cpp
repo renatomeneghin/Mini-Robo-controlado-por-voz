@@ -1,25 +1,38 @@
-/*
- * SPDX-FileCopyrightText: 2021-2022 Espressif Systems (Shanghai) CO LTD
- *
- * SPDX-License-Identifier: Unlicense OR CC0-1.0
- */
+#include "../include/BLE.h"
 
-/****************************************************************************
-*
-* This demo showcases BLE GATT server. It can send adv data, be connected by client.
-* Run the gatt_client demo, the client demo will automatically connect to the gatt_server demo.
-* Client demo will enable gatt_server's notify after connection. The two devices will then exchange
-* data.
-*
-****************************************************************************/
-
-#include "../src/example_BLE.c"
+BLE BLE_Servidor("Renato");
 
 
-extern "C" void app_main(void)
-{
-    extern "C" ble();
+extern "C"{void app_main(void);}
 
-    return;
+void connectedTask (void * parameter){
+    for(;;) {
+        if (BLE_Servidor.getDeviceConnected()) {
+            ;//BLE_Servidor.send("Hello World!\n");
+          }
+        // disconnecting
+        if (!BLE_Servidor.getDeviceConnected() && BLE_Servidor.getOldDeviceConnected()) {
+            BLE_Servidor.startAdvertising(); // restart advertising
+            printf("start advertising\n");
+            BLE_Servidor.update();
+        }
+        // connecting
+        if (BLE_Servidor.getDeviceConnected() && !BLE_Servidor.getOldDeviceConnected()) {
+            // do stuff here on connecting
+            BLE_Servidor.update();
+        }
+
+        vTaskDelay(10/portTICK_PERIOD_MS); // Delay between loops to reset watchdog timer
+    }
+
+    vTaskDelete(NULL);
 }
 
+void app_main(void) {
+  // Create the BLE Device
+  BLE_Servidor.initFull();
+
+  xTaskCreate(connectedTask, "connectedTask", 5000, NULL, 1, NULL);
+
+  printf("Waiting a client connection to notify...\n");
+}
