@@ -85,7 +85,13 @@ static void event_handler(void* arg, esp_event_base_t event_base,
         }
         ESP_LOGI(TAG,"connect to the AP fail");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
-        ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
+        ip_event_got_ip"Operação Executada: " << data.Operacao << std::endl 
+        << "Data: " << std::setfill('0') << std::setw(2) << dia 
+        << "/" << std::setfill('0') << std::setw(2) << mes << "/" << ano
+        << "\t Hora: " << std::setfill('0') << std::setw(2) << hora << ":" 
+        << std::setfill('0') << std::setw(2) << minuto << ":" 
+        << std::setfill('0') << std::setw(2) << segundo << " " 
+        << meiodia[is_meiodia] << std::endl << std::endl_t* event = (ip_event_got_ip_t*) event_data;
         ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);

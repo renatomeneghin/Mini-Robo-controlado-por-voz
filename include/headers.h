@@ -5,6 +5,8 @@
 #include <pthread.h>
 #include <inttypes.h>
 #include <sstream>
+#include <thread>
+#include <chrono>
 #include <string>
 #include <memory>
 #include <esp_pthread.h>
@@ -39,18 +41,30 @@ Microfone *Mic = new Microfone_I2S(16000,GPIO_NUM_26, GPIO_NUM_27, GPIO_NUM_NC, 
 
 char Operations[5][20] = {"Para traz","Para Frente","Para Esquerda","Para Direita","Parar"};
 
-int raw_feature_get_data(size_t offset, size_t length, float *out_ptr);
-static void Carro_ParaFrente(void *args);
-static void Carro_ParaTraz(void *args);
-static void Carro_ParaEsquerda(void *args);    
-static void Carro_ParaDireita(void *args);
-static void Carro_Parar(void *args);
-void AplicacaoPrincipal();
-static void AtualizarClock(void *args); 
-void imprimirFila();
-static void Imprimir_UART(void *args);
-void UART_init();
+// main
 extern "C" void app_main(void);
+
+// Função para tratativa da rede neural
+int raw_feature_get_data(size_t offset, size_t length, float *out_ptr);
+
+//Operações com os motores
+void Carro_ParaFrente();
+void Carro_ParaTraz();
+void Carro_ParaEsquerda();    
+void Carro_ParaDireita();
+void Carro_Parar();
+
+void AplicacaoPrincipal();
+void AtualizarClock(); 
+
+//Operações com os registros
+void imprimirFila();
 void imprimirDado(Dados);
 stringstream preparar_dado(Dados);
-static void enviarFilaBLE(void *args);
+
+//UART
+void Imprimir_UART();
+void UART_init();
+
+//Bluetooth
+void enviarFilaBLE();

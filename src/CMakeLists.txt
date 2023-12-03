@@ -2,7 +2,7 @@
 # without default 'CMakeLists.txt' file.
 
 FILE(GLOB_RECURSE app_sources
-    #${CMAKE_SOURCE_DIR}/include/BLE.*
+    ${CMAKE_SOURCE_DIR}/include/BLE.h
     ${CMAKE_SOURCE_DIR}/include/calendar.h
     ${CMAKE_SOURCE_DIR}/include/clock.h
     ${CMAKE_SOURCE_DIR}/include/clockcalendar.h
@@ -24,7 +24,7 @@ FILE(GLOB_RECURSE app_sources
     ${CMAKE_SOURCE_DIR}/src/MicrofoneI2S.cpp
     ${CMAKE_SOURCE_DIR}/src/BLE.*
     ${CMAKE_SOURCE_DIR}/src/main.* 
-    #${CMAKE_SOURCE_DIR}/src/example_BLE.*
+    #${CMAKE_SOURCE_DIR}/src/main_BLE.*
     #${CMAKE_SOURCE_DIR}/src/host.*
     )
 
