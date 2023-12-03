@@ -161,8 +161,9 @@ stringstream preparar_dado(Dados data){
 }
 
 static void enviarFilaBLE(void *args){
+     
     for(Dados data = Operacoes.remove();data.Operacao[0];data = Operacoes.remove()){
         BLE_Servidor.send(preparar_dado(data).str());
         vTaskDelay(10/portTICK_PERIOD_MS);
-    }
+    } 
 }
