@@ -85,7 +85,7 @@ bool Clock::operator<(const Clock &clock) const
   relogio.readClock(&h1,&s1,&m1,&p1);
   //clock2.readClock(&h2,&s2,&m2,&p2);
   if(!bool(is_pm) && bool(p1)){
-    resultado == true;
+    resultado = true;
   }
   else if (bool(is_pm) == bool(p1)){
     if(hr < h1){
@@ -113,7 +113,7 @@ bool Clock::operator>(const Clock &clock) const
   relogio.readClock(&h1,&s1,&m1,&p1);
   //clock2.readClock(&h2,&s2,&m2,&p2);
   if(bool(is_pm) && !bool(p1)){
-    resultado == true;
+    resultado = true;
   }
   else if (bool(is_pm) == bool(p1)){
     if(hr > h1){

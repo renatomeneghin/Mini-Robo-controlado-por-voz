@@ -2,6 +2,7 @@
 # without default 'CMakeLists.txt' file.
 
 FILE(GLOB_RECURSE app_sources
+    ${CMAKE_SOURCE_DIR}/include/BLE.h
     ${CMAKE_SOURCE_DIR}/include/calendar.h
     ${CMAKE_SOURCE_DIR}/include/clock.h
     ${CMAKE_SOURCE_DIR}/include/clockcalendar.h
@@ -21,7 +22,21 @@ FILE(GLOB_RECURSE app_sources
     ${CMAKE_SOURCE_DIR}/src/Driver_Motores.cpp
     ${CMAKE_SOURCE_DIR}/src/Microfone.cpp
     ${CMAKE_SOURCE_DIR}/src/MicrofoneI2S.cpp
-    ${CMAKE_SOURCE_DIR}/src/main_UART.cpp 
+    ${CMAKE_SOURCE_DIR}/src/BLE.*
+    ${CMAKE_SOURCE_DIR}/src/main.* 
+    #${CMAKE_SOURCE_DIR}/src/main_BLE.*
+    #${CMAKE_SOURCE_DIR}/src/host.*
     )
 
-idf_component_register(SRCS ${app_sources})
+idf_component_register(
+    SRCS 
+    ${app_sources}
+    REQUIRES
+    bt
+    nvs_flash
+    driver
+    PRIV_REQUIRES 
+    bt
+    )
+
+    

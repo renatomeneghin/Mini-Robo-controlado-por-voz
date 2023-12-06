@@ -19,6 +19,7 @@ void listar_um(Dados);
 void listar_tudo();
 void imprimir_calendario(ClockCalendar cc);
 void listar_intervalo();
+void listarTempoFuncionamento();
 
 int main(){
     
@@ -33,7 +34,8 @@ int main(){
         int i;
         cout << "Escolha uma opção:" << endl
              << "1: Listar Todos os elementos da lista." << endl
-             << "2: Listar Elementos sobre um intervalo."<< endl;
+             << "2: Listar Elementos sobre um intervalo."<< endl
+             << "3: Imprimir tempo de funcionamento."<< endl;
 
         cin >> i;
 
@@ -44,6 +46,9 @@ int main(){
             break;
         case 2:
             listar_intervalo();
+            break;
+        case 3:
+            listarTempoFuncionamento();
             break;
         default:
             cout << "Comando invalido!";
@@ -112,43 +117,26 @@ void listar_um(Dados data){
 }
 
 void listar_tudo(){
-    for(Dados data = dados.removeFirst();data.Operacao[0];data = dados.removeFirst()){
+    for(Dados data = Operacoes.remove();data.Operacao[0];data = Operacoes.remove()){
         listar_um(data);
     }
 }
 
-void listar_intervalo(){
-    ClockCalendar cc1, cc2;
-    int dia1, mes1, ano1, hora1, minuto1, segundo1, pm1, dia2, mes2, ano2, hora2, minuto2, segundo2, pm2;
-    
-    cout << "Digite a Primeira data no formato: " << endl
-         << "Dia/Mes/Ano    Hora:Minuto:Segundo (AM/PM = 0/1)" << endl;
-
-    cin >> dia1;  cin >> mes1; cin >> ano1;
-    cin >> hora1; cin >> minuto1; cin >> segundo1; cin >> pm1;
-    
-    cc1 = ClockCalendar(mes1,dia1,ano1,hora1,minuto1,segundo1,pm1);
-
-    cout << "Digite a segunda data: " << endl;
-
-    cin >> dia2; cin >> mes2; cin >> ano2; 
-    cin >> hora2; cin >> minuto2; cin >> segundo2; cin >> pm2;
-    
-    cc2 = ClockCalendar(mes2,dia2,ano2,hora2,minuto2,segundo2,pm2);
-    
-    List validos;
-    
-    for(Dados dado = dados.removeFirst();dado.Operacao[0];dado = dados.removeFirst()){  
-        ClockCalendar cc = dado.Data_Hora;
-
-        if ((cc > cc1) && (cc < cc2)){
-            validos.insertAfterLast(dado);
-        }
+void listarTempoFuncionamento(){
+    std::stringstream Tempo;
+    try{bool lista = strcmp(dados.readFirst().Operacao,"");}
+    catch (const char *s){
+        ;
     }
+    int hora, minuto, segundo, pm;
+    ClockCalendar cc1 = dados.readLast().Data_Hora;
 
-    cout << "Listando registros de operações válidos:" << endl;
-    this_thread::sleep_for(std::chrono::milliseconds(500));
-    for(Dados data = validos.removeFirst();data.Operacao[0];data = validos.removeFirst()){
-        listar_um(data);
-    }
+    cc1.subtract(dados.readFirst().Data_Hora);
+    cc1.readClock(&hora,&segundo,&minuto,&pm);
+
+    Tempo << "Tempo de funcionamento: "
+    << std::setfill('0') << std::setw(2) << hora
+    << ":" << std::setfill('0') << std::setw(2) << minuto
+    << ":" << std::setfill('0') << std::setw(2) << segundo;
+
 }

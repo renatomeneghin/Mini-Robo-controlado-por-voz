@@ -92,7 +92,7 @@ bool ClockCalendar::greater_than(ClockCalendar cc1){
         }
       else if(dia == dia2){ 
         if(pm && !pm2){
-            resultado == true;
+            resultado = true;
         }
         else if (pm == pm2){
           if(hora > hora2){
@@ -135,7 +135,7 @@ bool ClockCalendar::smaller_than(ClockCalendar cc1){
         }
         else if(dia == dia2){ 
           if(pm && !pm2){
-            resultado == true;
+            resultado = true;
           }
           else if (pm == pm2){
             if(hora < hora2){

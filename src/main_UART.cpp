@@ -175,15 +175,10 @@ static void Imprimir_UART(void *args){
     Dados data;
     stringstream ss;
     
-    try{
-        data = Operacoes.remove();
-    }
-    catch(const char *s){
-        ;
-    }
-    catch(...){
-        ;
-    }
+    try{data = Operacoes.remove();}
+    catch(const char *s){;}
+    catch(...){;
+}
     
     data.Data_Hora.readCalendar(&mes, &dia, &ano);
     data.Data_Hora.readClock(&hora, &segundo, &minuto, &pm);

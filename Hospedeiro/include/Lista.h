@@ -31,7 +31,6 @@
 #include "Node.h"
 
 class List {
-
   Node* head;
 
 public:
@@ -41,6 +40,8 @@ public:
   void insertAfterLast(Dados dat);
   Dados readFirst();
   Dados removeFirst();
+  Dados readLast();
+  Dados removeLast();
   void insertionSort(Dados value);
   Dados removeNode(Dados dat);
 };
