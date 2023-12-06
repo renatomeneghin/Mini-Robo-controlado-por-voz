@@ -41,22 +41,22 @@ void app_main(void) {
     BLE_Servidor.initFull();
     UART_init();
 
+    Operacoes.insert({"Inicializacao",*cc});
+    
     auto cfg = esp_pthread_get_default_config();
     cfg.stack_size = 4096;
     esp_pthread_set_cfg(&cfg);
 
     std::thread Clock(AtualizarClock);
     
-    Operacoes.insert({"Inicializacao",*cc});
     
     while(1){
         std::thread Main_app(AplicacaoPrincipal);
 
         if (BLE_Servidor.getBLEEnvio()){
             BLE_Servidor.setBLEEnvio(false);
-            enviarFilaBLE();
-            //std::thread BluetoothEnviar(enviarFilaBLE);
-            //BluetoothEnviar.detach();
+            std::thread BluetoothEnviar(enviarFilaBLE);
+            BluetoothEnviar.detach();
         }
 
         Main_app.join();
@@ -91,13 +91,13 @@ void Carro_ParaEsquerda(){
     motor1->setDuty(100);
     motor1->girar();
     motor2->setDirecao(0);
-    motor2->setDuty(60);
+    motor2->setDuty(50);
     motor2->girar();
 }
 
 void Carro_ParaDireita(){
     motor1->setDirecao(0);
-    motor1->setDuty(60);
+    motor1->setDuty(50);
     motor1->girar();
     motor2->setDirecao(0);
     motor2->setDuty(100);

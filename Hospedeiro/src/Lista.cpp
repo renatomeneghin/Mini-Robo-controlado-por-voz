@@ -60,6 +60,7 @@ void List::insertAfterLast(Dados dat) {
 }
 
 Dados List::readFirst() {
+    if(!head) throw "Lista Vazia";
    return head->getLog(); 
 }
 
@@ -74,6 +75,36 @@ Dados List::removeFirst() {
   return retval;
 }
 
+Dados List::readLast() {
+    Node* q = head;
+    if (!head)
+        throw "No elements on List";
+    else {
+        while (q->getNext()) {
+            q = q->getNext();
+        }
+    }
+    return q->getLog();
+}
+
+Dados List::removeLast() {
+    Dados retval;
+    Node* p = head;
+    Node* q = head;
+    if (!head)
+        throw "No elements on List";
+    else {
+        while (q->getNext()) {
+            p = q;
+            q = p->getNext();
+        }
+    }
+    retval = q->getLog();
+    p->setNext(NULL);
+    delete q;
+
+    return retval;
+}
 
 void List::insertionSort(Dados value) {
   Node* p = head;
