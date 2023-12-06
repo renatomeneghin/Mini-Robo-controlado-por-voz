@@ -10,6 +10,8 @@
 #include <string>
 #include <memory>
 #include <esp_pthread.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 #include <edge-impulse-sdk/classifier/ei_run_classifier.h>
 #include "freertos/FreeRTOS.h"
@@ -28,6 +30,7 @@
 #include "esp_log.h"
 
 using namespace std;
+//using namespace std::chrono;
 
 BLE BLE_Servidor("Renato");
 ClockCalendar *cc = new ClockCalendar(11,18,2023,8,0,0,true);
@@ -39,7 +42,7 @@ Microfone *Mic = new Microfone_I2S(16000,GPIO_NUM_26, GPIO_NUM_27, GPIO_NUM_NC, 
                                        I2S_SLOT_BIT_WIDTH_32BIT,I2S_SLOT_MODE_MONO,I2S_STD_SLOT_RIGHT,
                                        I2S_CLK_SRC_DEFAULT,I2S_MCLK_MULTIPLE_384);
 
-char Operations[5][20] = {"Para traz","Para Frente","Para Esquerda","Para Direita","Parar"};
+char Operations[5][20] = {"Para-traz","Para-Frente","Para-Esquerda","Para-Direita","Parar"};
 
 // main
 extern "C" void app_main(void);
@@ -63,7 +66,7 @@ void imprimirDado(Dados);
 stringstream preparar_dado(Dados);
 
 //UART
-void Imprimir_UART();
+void Imprimir_UART(Dados data);
 void UART_init();
 
 //Bluetooth

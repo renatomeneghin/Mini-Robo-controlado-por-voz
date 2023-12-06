@@ -2,10 +2,11 @@
 
 void AplicacaoPrincipal(){  
     uint8_t current_operation;
-    static uint8_t previous_operarion = 5;
-    ei_impulse_result_t result = { 0 };
+    static uint8_t previous_operarion = 10;
 
-    void (*action[5])(void *args) = {Carro_ParaTraz,Carro_ParaFrente,Carro_ParaEsquerda,Carro_ParaDireita,Carro_Parar};
+    ei_impulse_result_t result = {0};
+
+    void (*action[5])() = {Carro_ParaTraz,Carro_ParaFrente,Carro_ParaEsquerda,Carro_ParaDireita,Carro_Parar};
     // the features are stored into flash, and we don't want to load everything into RAM
     signal_t features_signal;
     features_signal.total_length = BUFFER_LEN;
@@ -22,11 +23,13 @@ void AplicacaoPrincipal(){
     else if (result.classification[7].value > 0.5){current_operation = 3;}
     else{current_operation = 4;}
     
-    if (previous_operarion != current_operation){
+    
+    //if(previous_operarion != current_operation){
         previous_operarion = current_operation;
-        std::thread Op(action[current_operation]);
         Operacoes.insert({Operations[current_operation],*cc});
-    }
+        std::thread Operating(action[current_operation]);
+        Operating.detach();
+    //}
     Mic->hearSound();
 }
 
@@ -36,20 +39,27 @@ void app_main(void) {
     motor1->init();
     motor2->init();
     BLE_Servidor.initFull();
-    Operacoes.insert({"Inicializacao",*cc});
+    UART_init();
+
     auto cfg = esp_pthread_get_default_config();
+    cfg.stack_size = 4096;
     esp_pthread_set_cfg(&cfg);
 
     std::thread Clock(AtualizarClock);
     
-    //int i = 0;
+    Operacoes.insert({"Inicializacao",*cc});
+    
     while(1){
-        AplicacaoPrincipal();
+        std::thread Main_app(AplicacaoPrincipal);
 
-        if (BLE_Servidor.getBLEEnvio() && BLE_Servidor.getDeviceConnected()){
+        if (BLE_Servidor.getBLEEnvio()){
             BLE_Servidor.setBLEEnvio(false);
-            std::thread Bluetooth(enviarFilaBLE);
+            enviarFilaBLE();
+            //std::thread BluetoothEnviar(enviarFilaBLE);
+            //BluetoothEnviar.detach();
         }
+
+        Main_app.join();
     }    
 }
 
@@ -81,13 +91,13 @@ void Carro_ParaEsquerda(){
     motor1->setDuty(100);
     motor1->girar();
     motor2->setDirecao(0);
-    motor2->setDuty(5);
+    motor2->setDuty(60);
     motor2->girar();
 }
 
 void Carro_ParaDireita(){
     motor1->setDirecao(0);
-    motor1->setDuty(5);
+    motor1->setDuty(60);
     motor1->girar();
     motor2->setDirecao(0);
     motor2->setDuty(100);
@@ -111,7 +121,7 @@ static void imprimirfila(void *args)
 {
     try{
         for(Dados data = Operacoes.remove();data.Operacao[0];data = Operacoes.remove()){
-            imprimirUART(data);
+            Imprimir_UART(data);
         }
     }
     catch (const char *s){;}
@@ -125,9 +135,11 @@ void imprimirDado(Dados data)
 {
     char meiodia[2][3] = {"AM", "PM"};
     int mes, dia, ano, hora, minuto, segundo, pm, is_meiodia = 0;
-
-    data = Operacoes.remove();
-
+    
+    data.Data_Hora.readCalendar(&mes, &dia, &ano);
+    data.Data_Hora.readClock(&hora, &segundo, &minuto, &pm);
+    is_meiodia = (pm)? 1 : 0;
+	
     std::cout << "Operação Executada: " << data.Operacao << std::endl 
         << "Data: " << std::setfill('0') << std::setw(2) << dia 
         << "/" << std::setfill('0') << std::setw(2) << mes << "/" << ano
@@ -150,7 +162,7 @@ stringstream preparar_dado(Dados data){
     ss << data.Operacao << ";" 
         << dia << ";" << mes << ";" << ano << ";" 
         << hora << ";" << minuto << ";" << segundo << ";" 
-        << meiodia[is_meiodia];
+        << meiodia[is_meiodia] << endl;
 
     return ss;
 }
@@ -159,7 +171,7 @@ void enviarFilaBLE(){
     try{ 
         for(Dados data = Operacoes.remove();data.Operacao[0];data = Operacoes.remove()){
             BLE_Servidor.send(preparar_dado(data).str());
-            vTaskDelay(10/portTICK_PERIOD_MS);
+            //std::this_thread::sleep_for(1ms);
         }
     }
     catch (const char *s){;}
@@ -185,20 +197,8 @@ void UART_init(){
 }
 
 
-void Imprimir_UART(){
-    Dados data;
-    stringstream ss;
-    
-    try{data = Operacoes.remove();}
-    catch(const char *s){;}
-    catch(...){;}
-    
-    ss << preparar_dado(data);
-
-    // Read data from the UART
-    int len = ss.gcount();
-    
+void Imprimir_UART(Dados data){
+    stringstream ss = preparar_dado(data);
     // Write data back to the UART
-    std::cout << ss.str().c_str();
-    
+    std::cout << ss.str().c_str();    
 }
